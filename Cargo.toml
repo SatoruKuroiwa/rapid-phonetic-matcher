@@ -1,0 +1,25 @@
+[package]
+name = "rapid_phonetic_matcher"
+version = "0.1.0"
+edition = "2021"
+description = "Japanese phonetic similarity matching library for STT error correction"
+license = "MIT"
+readme = "README.md"
+keywords = ["japanese", "phonetic", "stt", "matching", "nlp"]
+categories = ["text-processing", "algorithms"]
+exclude = ["data/", "docs/", "examples/", ".claude/"]
+
+[lib]
+name = "rapid_phonetic_matcher"
+path = "src/lib.rs"
+
+[dependencies]
+unicode-normalization = "0.1"
+lindera = { version = "0.36", features = ["ipadic"], optional = true }
+
+[features]
+kanji = ["lindera"]
+
+[[bin]]
+name = "rpm"
+path = "src/bin/rpm.rs"
