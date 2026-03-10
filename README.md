@@ -17,14 +17,14 @@
 
 ```toml
 [dependencies]
-rapid_phonetic_matcher = { git = "https://github.com/yourname/rapid-phonetic-matcher" }
+rapid_phonetic_matcher = { git = "https://github.com/SatoruKuroiwa/rapid-phonetic-matcher" }
 ```
 
 漢字入力対応が必要な場合：
 
 ```toml
 [dependencies]
-rapid_phonetic_matcher = { git = "https://github.com/yourname/rapid-phonetic-matcher", features = ["kanji"] }
+rapid_phonetic_matcher = { git = "https://github.com/SatoruKuroiwa/rapid-phonetic-matcher", features = ["kanji"] }
 ```
 
 ## 使い方
