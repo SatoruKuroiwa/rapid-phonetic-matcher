@@ -24,10 +24,10 @@ fn spec_voiced_stop_confusion() {
     assert_similarity_range("カルミ", "カルビ", 0.7, 1.0);
 }
 
-/// Spec case 2: 類似固有名詞 — カルビー vs カルディー
+/// Spec case 2: 類似固有名詞 — カルミー vs カルディー
 #[test]
 fn spec_similar_proper_nouns() {
-    assert_similarity_range("カルビー", "カルディー", 0.7, 0.99);
+    assert_similarity_range("カルミー", "カルディー", 0.7, 0.99);
 }
 
 /// Spec case 3: 清濁の揺らぎ — バレット vs パレット
@@ -109,18 +109,18 @@ fn voicing_b_p_longer_word() {
 
 #[test]
 fn voicing_k_g_longer_word() {
-    assert_similarity_range("グーグル", "クークル", 0.8, 1.0);
+    assert_similarity_range("カガミ", "カカミ", 0.8, 1.0);
 }
 
 #[test]
 fn voicing_s_z_in_context() {
-    assert_similarity_range("マイクロソフト", "マイクロゾフト", 0.9, 1.0);
+    assert_similarity_range("カザリモノ", "カサリモノ", 0.9, 1.0);
 }
 
 #[test]
 fn voicing_t_d_multiple() {
-    // トヨタ vs ドヨダ (two t/d swaps)
-    assert_similarity_range("トヨタ", "ドヨダ", 0.7, 1.0);
+    // タカダ vs ダカタ (two t/d swaps)
+    assert_similarity_range("タカダ", "ダカタ", 0.7, 1.0);
 }
 
 // ============================================================
@@ -268,7 +268,7 @@ fn foreign_di_de() {
 
 #[test]
 fn fh_confusion_feisu_heisu() {
-    assert_similarity_range("フェイスブック", "ヘイスブック", 0.9, 1.0);
+    assert_similarity_range("フェイスマスク", "ヘイスマスク", 0.9, 1.0);
 }
 
 #[test]
@@ -286,39 +286,45 @@ fn fh_confusion_fi_hi() {
 // ============================================================
 
 #[test]
-fn stt_amazon_amason() {
-    assert_similarity_range("アマゾン", "アマソン", 0.9, 1.0);
+fn stt_voicing_z_s() {
+    // ゾウキン vs ソウキン (z/s混同)
+    assert_similarity_range("ゾウキン", "ソウキン", 0.9, 1.0);
 }
 
 #[test]
-fn stt_google_kuukuru() {
-    assert_similarity_range("グーグル", "クークル", 0.8, 1.0);
+fn stt_voicing_k_g_long() {
+    // カガミ vs カカミ (k/g混同)
+    assert_similarity_range("カガミ", "カカミ", 0.8, 1.0);
 }
 
 #[test]
-fn stt_microsoft_z_variant() {
-    assert_similarity_range("マイクロソフト", "マイクロゾフト", 0.9, 1.0);
+fn stt_voicing_s_z_long() {
+    // カザグルマ vs カサクルマ (s/z + k/g混同)
+    assert_similarity_range("カザグルマ", "カサクルマ", 0.8, 1.0);
 }
 
 #[test]
-fn stt_starbucks_confusion() {
-    // スターバックス vs スタアバクス (長音+促音省略)
-    assert_similarity_range("スターバックス", "スタアバクス", 0.8, 1.0);
+fn stt_long_vowel_sokuon() {
+    // スーパーマーケット vs スパマケト (長音+促音省略)
+    assert_similarity_range("スーパーマーケット", "スパマケト", 0.5, 0.9);
 }
 
 #[test]
-fn stt_toyota_doyoda() {
-    assert_similarity_range("トヨタ", "ドヨダ", 0.7, 1.0);
+fn stt_voicing_t_d_multi() {
+    // タカダ vs ダカタ (t/d 2箇所)
+    assert_similarity_range("タカダ", "ダカタ", 0.7, 1.0);
 }
 
 #[test]
-fn stt_honda_honta() {
-    assert_similarity_range("ホンダ", "ホンタ", 0.8, 1.0);
+fn stt_voicing_d_t() {
+    // ドングリ vs トンクリ (d/t + g/k混同)
+    assert_similarity_range("ドングリ", "トンクリ", 0.8, 1.0);
 }
 
 #[test]
-fn stt_panasonic_banasoniku() {
-    assert_similarity_range("パナソニック", "バナソニク", 0.8, 1.0);
+fn stt_voicing_b_p_long() {
+    // バラエティー vs パラエティ (b/p + 長音省略)
+    assert_similarity_range("バラエティー", "パラエティ", 0.8, 1.0);
 }
 
 #[test]

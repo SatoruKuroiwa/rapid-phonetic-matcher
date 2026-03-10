@@ -12,6 +12,9 @@
 .DS_Store
 Thumbs.db
 
+# Test fixtures (non-public data)
+tests/fixtures/
+
 # Misc
 *.swp
 *.swo
