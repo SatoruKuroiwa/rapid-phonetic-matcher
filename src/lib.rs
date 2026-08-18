@@ -23,8 +23,17 @@ mod phoneme;
 #[cfg(feature = "kanji")]
 mod kanji;
 
-use normalizer::normalize;
-use phoneme::{common_prefix_len, to_phonemes, Phoneme};
+use phoneme::common_prefix_len;
+
+// Public phoneme-level API: callers that keep a large candidate set can
+// phonemize once (at startup — or at BUILD time, serializing the phoneme
+// sequences themselves) and score with `PhoneticMatcher::similarity_from_phonemes`,
+// skipping the per-call re-phonemization that dominates a full-corpus scan.
+// Contract: `to_phonemes(&normalize(s))` is exactly the phonemization that
+// `calculate_similarity` applies to each side (the optional `kanji` feature's
+// kanji→reading preprocessing excepted).
+pub use normalizer::normalize;
+pub use phoneme::{to_phonemes, Phoneme};
 
 /// Result of a phonetic match.
 #[derive(Debug, Clone)]
@@ -166,7 +175,13 @@ impl PhoneticMatcher {
 
     /// Compute similarity from pre-computed phoneme sequences.
     /// Includes prefix bonus for partial matches.
-    fn similarity_from_phonemes(a: &[Phoneme], b: &[Phoneme]) -> f32 {
+    ///
+    /// Public so callers can score against phoneme sequences they prepared
+    /// (and possibly serialized) ahead of time via `to_phonemes(&normalize(s))`;
+    /// `calculate_similarity(a, b)` is exactly
+    /// `similarity_from_phonemes(&to_phonemes(&normalize(a)), &to_phonemes(&normalize(b)))`
+    /// when the `kanji` feature is off.
+    pub fn similarity_from_phonemes(a: &[Phoneme], b: &[Phoneme]) -> f32 {
         let max_dist = distance::max_distance(a, b);
         if max_dist == 0.0 {
             return 1.0;
@@ -466,6 +481,28 @@ fn sort_and_truncate(results: &mut Vec<MatchResult>, limit: usize) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The public phoneme-level API's contract: scoring pre-phonemized
+    /// sequences is bit-identical to the string-level entry point.
+    #[test]
+    fn public_phoneme_api_matches_calculate_similarity() {
+        let matcher = PhoneticMatcher::new();
+        for (a, b) in [
+            ("ちばしろい", "ちばしらい"),
+            ("カルミ", "カルビ"),
+            ("さとー", "さとう"),
+            ("やまだ", "はまだ"),
+            ("ソニー", "ソニ"),
+        ] {
+            let pa = to_phonemes(&normalize(a));
+            let pb = to_phonemes(&normalize(b));
+            assert_eq!(
+                PhoneticMatcher::similarity_from_phonemes(&pa, &pb),
+                matcher.calculate_similarity(a, b),
+                "({a}, {b})"
+            );
+        }
+    }
 
     #[test]
     fn test_identical_strings() {
